@@ -342,4 +342,177 @@ const numbersToReduce = [-1, 2, 3];
 const sum = numbersToReduce.reduce((accumulator, currentValue) => accumulator + currentValue);
 console.log(sum);
 
+// functions
+// function declaration
+walk(); // In function declaration, you can call the function even before it is declared. This is called Hoisting.
+function walk() {
+    console.log('walk');
+}
 
+// anonymous function expression
+let run = function () {
+    console.log('run')
+};
+run(); // hoisting is not possible in function expressions.
+let jump = function () {
+    console.log('jump')
+};
+let move = jump;
+move();
+jump();
+
+// Nan
+function testSum(a, b) {
+    return a + b;
+}
+console.log(testSum(1)); // this will return 1 + undefined => NaN
+console.log(testSum(1, 2, 3, 4, 5));
+
+// arguments (It is an object)
+function testSumWithArguments() {
+    let total = 0;
+    for (let value of arguments) {
+        total += value;
+    }
+    return total
+}
+console.log(testSumWithArguments(1, 2, 3, 4, 5));
+
+// rest operator. This is not same as spread operator.
+// args is an array
+function testSumWithRestOperator(...args) {
+    return args.reduce((a, b) => a + b);
+}
+console.log(testSumWithRestOperator(1, 2, 3, 4, 5));
+
+// default parameters.
+// make sure default parameters are last or make sure all parameters after default parameters are also default parameters.
+function interest(principal, rate = 3.5, years = 5) {
+    return principal * rate / 100 * years;
+}
+console.log(interest(10000));
+
+// getters and setters
+const personSample = {
+    firstName: 'FirstName',
+    lastName: 'LastName',
+    get fullName() { // this kind of function declaration is possible in ES6
+        return `${this.firstName} ${this.lastName}`
+    },
+    set fullName(value) {
+        if (typeof value !== 'string') {
+            throw new Error('Value is not a string');
+        }
+
+        const parts = value.split(' ');
+        this.firstName = parts[0];
+        this.lastName = parts[1];
+    }
+}
+console.log(personSample.fullName);
+personSample.fullName = 'UpdatedFirst UpdatedSecond';
+console.log(personSample.fullName);
+
+// error handling
+try {
+    personSample.fullName = null;
+} catch (error) {
+    console.log('caught in catch');
+}
+
+// local vs global scope
+let messageColor = 'yellow'; // global scope
+function start() {
+    const message = 'hi'; // local scope
+    messageColor = 'red';
+    console.log(messageColor);
+}
+
+function stop() {
+    const message = 'bye';// local scope
+    console.log(messageColor);
+}
+console.log(messageColor);
+start();
+stop();
+console.log(messageColor);
+
+// let vs var
+var age1 = 30; // 'this' global variable is attached to window object.
+let age2 = 30; // 'this' global variable is not attached to window object.
+function problemWithVar() { // functions declared like this are still attached to window object.
+    for (var i = 0; i < 5; i++) {
+        console.log(i);
+    }
+    console.log(i); // the scope of i is outside for block because of var. 
+    // This is not possible if you use let.
+    // The scope of variable decalred using var is limited within the function but not within block.
+    // var is one of the weirdest thing in JS we had for long time
+    // till ES6, var is the only way => function scoped
+    // from ES6 : let, const => block scoped
+}
+problemWithVar();
+
+// this keyword
+const video = {
+    title: 'a',
+    play() {
+        console.log(this); // 'this' references to the object video
+    }
+}
+video.play();
+function playVideo() {
+    console.log(this); // 'this' references to the global object in node, window object in browser
+}
+playVideo();
+
+// this in constructor function
+function Video(title) {
+    this.title = title;
+    console.log(this); // 'this' references new object created
+}
+const v = new Video('testVideo');
+
+// confusing and problematic stuff with 'this'
+const videoProblem = {
+    title: 'a',
+    tags: ['a', 'b', 'c'],
+    showTags() {
+        this.tags.forEach(function (tag) {
+            console.log(this.title, tag); // 'this' will be global object(for node) here because it is inside a function
+        })
+    },
+    displayTags() {
+        this.tags.forEach(function (tag) {
+            console.log(this.title, tag); // 'this' will be video problem object here because we are passing reference of 'this' to the function
+        }, this) // passing 'this' like this in function is ugly
+    },
+    // alternate option. but not recommended
+    viewTags() {
+        const self = this;
+        this.tags.forEach(function (tag) {
+            console.log(self.title, tag); // 'self' will be video problem object here because it references to this' outside the function
+        })
+    },
+    // newer way to do this. Use arrow function introduced in ES6
+    seeTags() {
+        this.tags.forEach(tag => {
+            console.log(this.title, tag); // arrow function inherit 'this' from containing function
+        })
+    },
+}
+videoProblem.showTags();
+videoProblem.displayTags();
+videoProblem.viewTags();
+videoProblem.seeTags();
+
+// Changing 'this' using call, apply, bind
+function playVideo(a, b) {
+    console.log(this);
+}
+
+playVideo.call({ name: 'TestName' }, 1, 2);
+playVideo.apply({ name: 'TestName' }, [1, 2]);
+var fn = playVideo.bind({ name: 'TestName' });
+fn();
+playVideo.bind({ name: 'IIFEName' })(); // Immediately Invoked Function Expression

@@ -29,3 +29,11 @@
 - Javascript uses garbage collection to find variable, objects that are no longer used and deallocates memory.
 - 2 kinds of String. 1) string primitive and 2) string object.
 - Built in Javascript objects: Math, String, Date etc.
+
+## Functions
+- Functions are objects. Functions can be defined in 2 ways. 1) Function declaration and 2) Function expression.
+- Hoisting: When Javascript engine executes a javascript code, it moves all function declarations to the top of the file automatically . Hence you can call the functions defined using function declarations even before they are declared. This is not possible in function expressions.
+- The scope of variable decalred using var is limited within the scope function and outside block.
+- var is one of the weirdest thing in JS we had for long time. Till ES6, var is the only way which is function scoped. From ES6 : let, const is introduced and it is block scoped.
+- Global variable declared using var keyword is attached to window object where as global variable declared using let keyword is not attached to window object. The problem here is, there is only one instance of window object in apps and if some external framework uses a variable declared in same name like ours then that variable can overwrite our variable.
+- "this" keyword- it references the object that is executing the current function. A function inside an object is called method. "this" inside method references the object. "this" inside function references global object (window in browser and global in node).
