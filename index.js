@@ -344,12 +344,14 @@ console.log(sum);
 
 // functions
 // function declaration
+// note: function declarations are hoisted which means they are raised to the top of code.
+// As it is hoisted, you can call the function even before it is declared in the code and the code will work fine.
 walk(); // In function declaration, you can call the function even before it is declared. This is called Hoisting.
 function walk() {
     console.log('walk');
 }
 
-// anonymous function expression
+// anonymous function expression. Expression ends with semicolon at the end of curly braces.
 let run = function () {
     console.log('run')
 };
@@ -516,3 +518,279 @@ playVideo.apply({ name: 'TestName' }, [1, 2]);
 var fn = playVideo.bind({ name: 'TestName' });
 fn();
 playVideo.bind({ name: 'IIFEName' })(); // Immediately Invoked Function Expression
+
+// prototypes
+function Shape(size) {
+    this.size = size;
+}
+shape1 = new Shape(1);
+console.log(Object.getPrototypeOf(shape1)); // shape1 -> Shape -> Object
+// Every Constructor has a prototype property which is equal to itself or the function it uses to create object when you call the constructor.
+console.log(Shape.prototype); // Shape -> Object
+
+let testPerson = { name: 'TestName1' };
+let objectBase = Object.getPrototypeOf(testPerson);
+// enumerable attribute will be false and that is the reason this property or function 
+// does not show up when we enumerate property of the object.
+console.log(Object.getOwnPropertyDescriptor(objectBase, 'toString'));
+
+Object.defineProperty(testPerson, 'name', {
+    writable: false, // this makes the property as read only
+    enumerable: false, // this makes the property invisible during enumeration or object.keys
+    configurable: false // cannot delete the property
+});
+testPerson.name = "updatedname";
+console.log(testPerson.name); // the name wont be updated because the writable description is set to false
+
+function Members(count) {
+    // Instance members
+    this.count = count;
+}
+
+// Prototype members
+Members.prototype.show = function () {
+    console.log('showing the members');
+}
+
+// You can overwrite members defined in base object using prototype
+Members.prototype.toString = function () {
+    return 'Total Members are ' + this.count; // you can access instance members in prototype members and vice versa.
+}
+const m1 = new Members(1);
+m1.show();
+m1.toString();
+
+// prototypical inheritance
+function Animal(color) {
+    this.color = color;
+}
+
+Animal.prototype.duplicate = function () {
+    console.log('duplicate');
+}
+
+function Fish(size, color) {
+    Animal.call(this, color); // calling the super constructor
+    this.size = size;
+}
+// The existing Fish.prototype will be FishBase - the object used to create new fishes
+Fish.prototype = Object.create(Animal.prototype); // this won't provide access to instance members. 
+//If you want access to instance members then set it equal to the Anumal object or new Animal();
+// whenver you reset prototype of an object you should reset the constructor
+Fish.prototype.constructor = Fish;
+
+Fish.prototype.swim = function () {
+    console.log('Swim');
+}
+
+function Human(height) {
+    this.height = height
+}
+
+// these 2 lines can be refactored and made as a reusable function then it is called Function Intermediate Inheritance 
+Human.prototype = Object.create(Animal.prototype);
+Human.prototype.constructor = Human;
+
+Human.prototype.duplicate = function () {
+    Animal.prototype.duplicate.call(this); // you can call base object method as well
+    console.log('human object overriding base object duplicate');
+}
+
+const animal = new Animal();
+const fish = new Fish(2, 'black');
+const human = new Human(6);
+console.log(Fish.prototype);
+fish.duplicate();
+human.duplicate();
+
+// polymorphism
+const animals = [
+    new Fish(3, 'white'),
+    new Human(7)
+];
+
+for (let animal of animals) {
+    animal.duplicate();
+}
+
+// mixins
+
+const canEat = {
+    eat: function () {
+        this.hunger--;
+        console.log('eating');
+    }
+}
+
+const canWalk = {
+    walk: function () {
+        console.log('walking');
+    }
+}
+
+const canSwim = {
+    swim: function () {
+        console.log('swimming');
+    }
+}
+
+function HumanBeing() {
+
+}
+
+function GoldFish() {
+
+}
+
+// this can be refactored to a function and that function is called mixin
+Object.assign(HumanBeing.prototype, canEat, canWalk);
+Object.assign(GoldFish.prototype, canEat, canSwim);
+
+const humanBeing = new HumanBeing();
+const goldFish = new GoldFish();
+humanBeing.eat();
+goldFish.swim();
+
+// Classes
+class Deer {
+    constructor(color) {
+        this.color = color;
+
+        // this is instance method
+        this.move = function () {
+            console.log('moving');
+        }
+    }
+    // this is prototype method
+    walk() {
+        console.log('walking');
+    }
+
+    // this is static method
+    static parse() {
+        console.log('parsed');
+    }
+}
+
+const deer = new Deer('brown');
+deer.walk();
+Deer.parse();
+
+// class declaration
+// unlike functions, class declaration and expressions are not hoisted
+// class declarations are most commonly used.
+class SampleClass {
+
+}
+// class expression
+const SampleClass2 = class {
+
+};
+
+// the 'this' keyword - again
+const CircleForThis = function () {
+    this.draw = function () {
+        console.log(this);
+    }
+};
+
+const ci = new CircleForThis();
+// method call
+ci.draw(); // here 'this' will be Circle object
+
+// function call
+const cidraw = ci.draw;
+cidraw(); // here 'this' will be window(browser) or global(node) object
+// if you enable 'use strict' mode then it will no longer point to global object but it will be undefined.
+
+class CircleClassForThis {
+    drawing() {
+        console.log(this);
+    }
+}
+
+const ccft = new CircleClassForThis();
+const ccftdraw = ccft.drawing;
+ccftdraw(); // this will be undefined. Because by default the body of classes are executed in strict mode.
+
+// private properties and methods
+// approach 1 - using symbols
+const _radius = Symbol(); // Symbol() creates unique value
+const _draw = Symbol();
+
+class CircleSymbol {
+    constructor(radius) {
+        this[_radius] = radius; // private property
+    }
+    [_draw]() { // private method
+        console.log('draw');
+    }
+}
+
+const cs = new CircleSymbol(1);
+console.log(cs.radius); // returns undefined
+
+// approach 2 - using weak maps
+const _cmradius = new WeakMap();
+const _cmmove = new WeakMap();
+class CircleMap {
+    constructor(radius) {
+        _cmradius.set(this, radius); // private property
+
+        _cmmove.set(this, () => { // private method
+            console.log('move', this);
+        })
+    }
+
+    get radius() { // getter
+        return _cmradius.get(this);
+    }
+
+    set radius(value) { // setter
+        if (value <= 0) {
+            throw new Error('Invalid radius');
+        }
+        _cmradius.set(this, value);
+    }
+
+    draw() {
+        console.log(_cmradius.get(this));// to access the private property
+        _cmmove.get(this)(); // to call the function
+    }
+}
+
+const cm = new CircleMap(1);
+console.log(cm._cmradius); // with return undefined
+console.log(cm.radius);
+cm.radius = 2;
+console.log(cm.radius);
+
+// inheritance
+class Message {
+    constructor(to) {
+        this.to = to;
+    }
+    send() {
+        console.log('message sent')
+    }
+}
+
+class Email extends Message {
+    constructor(to, cc) {
+        super(to);
+        this.cc = cc;
+    }
+
+    undo() {
+        console.log('email undo');
+    }
+
+    send() { // method overriding
+        super.send(); // to access base method if required.
+        console.log('email sent');
+    }
+}
+
+const email = new Email('abc@xyz.com', 'xyz@abc.com');
+email.send();
+email.undo();

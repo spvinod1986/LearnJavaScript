@@ -37,3 +37,31 @@
 - var is one of the weirdest thing in JS we had for long time. Till ES6, var is the only way which is function scoped. From ES6 : let, const is introduced and it is block scoped.
 - Global variable declared using var keyword is attached to window object where as global variable declared using let keyword is not attached to window object. The problem here is, there is only one instance of window object in apps and if some external framework uses a variable declared in same name like ours then that variable can overwrite our variable.
 - "this" keyword- it references the object that is executing the current function. A function inside an object is called method. "this" inside method references the object. "this" inside function references global object (window in browser and global in node).
+
+## Prototypes
+- 2 types of inheritance. 1) Classical and 2) Prototypical.
+- Javascript has no classes but objects. It uses prototypical inheritance to share common behaviour between objects.
+- A prototype is essentially a parent of another object.
+- Every object in JavaScript (except "object" base) has a prototype or parent which is the "object" base.
+- Prototypical Inheritance: When we access property or method of an object, JavaScript engine will look for the property or method in that object, if it cant find it then it will look for that member in the prototype of that object, if it cant find it then it will look for that member in its prototype and repeats it all the way up till the root object.
+- Objects created by given constructor will have same prototype.
+- 2 types of properties/methods. 1) Instance properties/methods and 2) Prototype properties/methods.
+- You can call Instance members from prototype members and vice versa.
+- object.keys returns only instance members.
+- for..in loop returns all members(instance and prototype). instance is called 'own' in javascript world. object.hasownProperty('testproperty') returns true if it is instance or own member of the object.
+- Avoid extending built in objects. It will create confusion and difficult to debug.
+- Using prototypical inheritance, you can have child objects share base object methods. The child objects can also override implementation of base object method, can call the base method from overridden method, can also call constructor of base object from child constructor.
+- Favor composition over inheritance: In Javascript we can do composition using Mixins.
+
+## Classes(ES6)
+- In ES6, there is a new way to create objects and implement inheritance. That is done by using classes. These classes are not similar to the classes we have in languages like C# or Java.
+- Classes here are just syntactical sugar over prototypical inheritance.
+- Babel: Babel is a Javascript compiler which gets the modern javascript code and it compiles it down to ES5 code which all browsers understand.
+- Hoisting: Function can be defined in 2 ways. 1) Function declaration and 2) Function expression. Function declarations are hoisted which means they are raised to the top of code. As it is hoisted, you can call the function even before it is declared in the code and the code will work fine. Function expressions are not hoisted.
+- Classes can be defined in 2 ways. 1) Class declaration and 2) Class Expression. Unlike functions, class declaration and expressions are not hoisted.
+- 2 types of method. 1) Instance method and 2) Static method. Instance method is available in instance of the class. Static methods are available on the class itself. Static methods are decorated with static keyword.
+- Private properties and methods can be defined using 2 approaches. 1) Symbols(ES6) and 2) WeakMaps(ES6).
+- Symbol is new primitive type added in ES6. A symbol is just a unique identifier. Symbol() === Symbol() is false. This is because each symbol creates unique identifier.
+- WeakMaps is also introduced in ES6. WeakMap is a dictionary where keys can be objects and values can be anything. If there are no references to the keys then they will be garbage collected.
+- 'get' and 'set' keyword added in ES6 helps to define getter and setter properties in ES6.
+- You can use 'extends' to inherit from base class. The constructor of child class should call base class constructor using 'super' method call.
