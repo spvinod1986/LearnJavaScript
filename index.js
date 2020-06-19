@@ -794,3 +794,17 @@ class Email extends Message {
 const email = new Email('abc@xyz.com', 'xyz@abc.com');
 email.send();
 email.undo();
+
+// modules
+
+// CommonJS Module Format
+const Invoice = require('./invoice');
+
+const invoice = new Invoice(100);
+invoice.generate();
+
+// ES6 Module Format
+// This won't work in Node. Hence commented.
+//import { Cart } from './cart';
+//const cart = new Cart(10);
+

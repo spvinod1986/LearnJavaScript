@@ -1,6 +1,6 @@
 # LearnJavaScript
 - Javascript is one of the most popular and widely used programming language.
-- For long time was used only in browsers to build web pages. But now we can build web/mobile apps, real time networking apps, command line tools and also games.
+- For long time JavaScript was used only in browsers to build web pages. But now we can build web/mobile apps, real time networking apps, command line tools and also games.
 - Every browser has JavaScript engine which can execute JavaScript. The JavaScriptEngine in Firefox is called SpiderMonkey and the JavaScripEngine in Chrome is called V8. In 2009, an engineer took the open source JavaScriptEngine V8 and embedded in C++ program. This program is called Node. With Node, you can run JavaScript code outside the browser. Hence JavaScript code can be run outside the browser in mobile or system as well.
 - Difference between JavaScript and ECMAScript: ECMAScript is just the specification. JavaScript is a programming language that confirms to this specification.
 
@@ -65,3 +65,13 @@
 - WeakMaps is also introduced in ES6. WeakMap is a dictionary where keys can be objects and values can be anything. If there are no references to the keys then they will be garbage collected.
 - 'get' and 'set' keyword added in ES6 helps to define getter and setter properties in ES6.
 - You can use 'extends' to inherit from base class. The constructor of child class should call base class constructor using 'super' method call.
+
+## Modules
+- We can split our code in to multiple files and each of these files are called Module.
+- Helps in Maintainability, Reuse, and Abstract. Modules are introduced in ES6.
+- There is no concept of modules in ES5. So during ES5, different developers came up with different syntaxes to solve this problem. These are called Module Formats. Some of the popular module formats are: AMD - Asynchronous Module defintion used in Browser applications. CommonJS used in Node. UMD - Universal Module Definition used in Browser as well as Node. As of ES6, Javascript natively supports ES6 Modules.
+- CommonJS used in Node and ES6 Modules are popular now.
+- Basics of Modularity - Things that are highly related should go together.
+- By default, everything declared in a module is considered to be private and it won't be accessible from outside unless we explicitly export it.
+- ES6 Tooling - When you are building browser applications you will need 2 kinds of tools. 1) Transpiler and 2) Bundler. Transpiler: It is combination of 2 words. Translator and Compiler. Basically it is a tool where we give the modern javascript code as input and this tool will convert the code in to ES5 code which all browsers can understand. Babel is an example of very popular transpiler for modern Javascript. The bundler is responsible combining all our javascript files in to single file. WebPack is the most popular bundler.
+- 
