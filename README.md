@@ -74,4 +74,9 @@
 - Basics of Modularity - Things that are highly related should go together.
 - By default, everything declared in a module is considered to be private and it won't be accessible from outside unless we explicitly export it.
 - ES6 Tooling - When you are building browser applications you will need 2 kinds of tools. 1) Transpiler and 2) Bundler. Transpiler: It is combination of 2 words. Translator and Compiler. Basically it is a tool where we give the modern javascript code as input and this tool will convert the code in to ES5 code which all browsers can understand. Babel is an example of very popular transpiler for modern Javascript. The bundler is responsible combining all our javascript files in to single file. WebPack is the most popular bundler.
+
+## TypeScript
+- TypeScript is super set of JavaScript. Any valid JavaScript code is also valid TypeScript code. But TypeScript has additionl features that do not exist in JavaScript and not support in current versions of browsers.
+- TypeScript has concept of strong typing, object oriented features, compile-time errors, good intellisense and great tooling.
+- TypeScript should be transpiled (translate + compile) to JavaScript to be understood by browsers.
 - 
